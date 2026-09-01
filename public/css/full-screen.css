@@ -1,0 +1,209 @@
+/* =========================================================
+   FULLSCREEN BUTTON
+   ========================================================= */
+
+.btn-fullscreen {
+    background: #fff;
+
+    color: var(--text);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    padding: 7px 13px;
+
+    font-size: .82rem;
+
+    font-weight: 600;
+
+    transition:
+        background .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+.btn-fullscreen:hover {
+    background: #f4f7fb;
+
+    border-color: var(--primary);
+
+    color: var(--primary);
+}
+
+.btn-fullscreen i {
+    margin-right: 5px;
+}
+
+
+/* =========================================================
+   LARGE SCREEN POS ADJUSTMENTS
+   ========================================================= */
+
+@media (min-width: 1450px) {
+
+    /* =====================================================
+       BOTTOM ACTION BAR
+       ===================================================== */
+
+    .bottom-bar {
+        height: 82px;
+
+        padding: 10px 24px 14px;
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        gap: 12px;
+    }
+
+
+    .bottom-btn {
+        height: 56px;
+
+        min-width: 160px;
+
+        padding: 0 30px;
+
+        font-size: .96rem;
+
+        border-radius: 11px;
+    }
+
+
+    .btn-clear {
+        min-width: 140px;
+    }
+
+
+    /* =====================================================
+       CART
+       ===================================================== */
+
+    .cart-panel {
+
+        /*
+         * Keep the cart above the bottom action bar.
+         */
+        height: calc(100vh - 82px);
+
+        padding: 10px 12px 8px;
+
+        align-items: flex-start;
+    }
+
+
+    .cart-card {
+
+        /*
+         * Slightly smaller than the available cart area.
+         */
+        height: calc(100% - 4px);
+
+        padding: 13px;
+
+        border-radius: 11px;
+    }
+
+
+    /* =====================================================
+       CART HEADER
+       ===================================================== */
+
+    .cart-title {
+        font-size: 1rem;
+
+        margin-bottom: 1px;
+    }
+
+
+    .order-number {
+        font-size: .68rem;
+
+        margin-bottom: 6px;
+    }
+
+
+    /* =====================================================
+       CART ITEMS
+       ===================================================== */
+
+    .cart-item {
+        padding: 6px 0;
+
+        gap: 6px;
+    }
+
+
+    .cart-thumb {
+        width: 38px;
+
+        height: 38px;
+    }
+
+
+    .cart-product-name {
+        font-size: .72rem;
+    }
+
+
+    .quantity {
+        margin-top: 3px;
+    }
+
+
+    /* =====================================================
+       CART SUMMARY
+       ===================================================== */
+
+    .summary {
+        margin-top: 4px;
+
+        padding-top: 7px;
+    }
+
+
+    .summary-row {
+        margin-bottom: 5px;
+
+        font-size: .73rem;
+    }
+
+
+    .summary-row.total {
+        padding-top: 7px;
+
+        margin-top: 4px;
+
+        margin-bottom: 7px;
+
+        font-size: .96rem;
+    }
+
+
+    /* =====================================================
+       DISCOUNT
+       ===================================================== */
+
+    .discount-input .form-control {
+        height: 34px;
+    }
+
+
+    .discount-input .btn {
+        height: 34px;
+
+        min-width: 62px;
+    }
+
+
+    /* =====================================================
+       PRODUCT GRID
+       ===================================================== */
+
+    .product-grid {
+        grid-template-columns:
+            repeat(6, minmax(135px, 1fr));
+    }
+}
