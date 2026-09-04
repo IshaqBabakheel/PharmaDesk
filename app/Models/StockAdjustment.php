@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class StockAdjustment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
 
     protected $fillable = [
         'adjustment_number',
@@ -27,6 +29,21 @@ class StockAdjustment extends Model
         'adjustment_date' => 'date',
         'stock_applied' => 'boolean',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('inventory')
+            ->logOnly([
+                'adjustment_date',
+                'type',
+                'reason',
+                'notes',
+                'status',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
 
     /*

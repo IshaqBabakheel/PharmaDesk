@@ -59,4 +59,19 @@ class PurchaseItem extends Model
     {
         return $this->belongsTo(Medicine::class);
     }
+
+    public function purchaseReturnItems()
+    {
+        return $this->hasMany(PurchaseReturnItem::class, 'purchase_item_id');
+    }
+
+    public function saleItems()
+    {
+        return $this->hasMany(SaleItem::class, 'purchase_item_id');
+    }
+
+    public function saleReturnItems()
+    {
+        return $this->hasMany(SaleReturnItem::class, 'purchase_item_id');
+    }
 }

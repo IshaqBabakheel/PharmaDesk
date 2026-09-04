@@ -236,7 +236,15 @@ return [
             'view',
             'create',
             'download',
-            'delete'
+            'delete',
+            'restore',
+            'cleanup',
+            'details',
+
+        ],
+
+        'audit-logs' => [
+            'view',
         ],
 
     ],

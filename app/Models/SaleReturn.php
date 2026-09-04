@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class SaleReturn extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
 
     protected $fillable = [
         'sale_id',
@@ -34,7 +36,27 @@ class SaleReturn extends Model
         'grand_total' => 'decimal:2',
     ];
 
-    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('sale_returns')
+            ->logOnly([
+                'sale_id',
+                'customer_id',
+                'return_date',
+                'subtotal',
+                'discount',
+                'tax',
+                'grand_total',
+                'reason',
+                'status',
+                'notes',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
+
+
 
     public function sale()
     {
@@ -60,7 +82,7 @@ class SaleReturn extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-    
+
     public function deleter()
     {
         return $this->belongsTo(User::class, 'deleted_by');

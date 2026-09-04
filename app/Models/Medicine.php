@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Medicine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * --------------------------------------------------------------------------
@@ -66,6 +68,38 @@ class Medicine extends Model
             'has_expiry' => 'boolean',
             'status' => 'boolean',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('medicines')
+            ->logOnly([
+                'name',
+                'generic_name',
+                'sku',
+                'barcode',
+                'medicine_code',
+                'medicine_category_id',
+                'medicine_type_id',
+                'manufacturer_id',
+                'unit_id',
+                'purchase_price',
+                'selling_price',
+                'wholesale_price',
+                'minimum_stock',
+                'maximum_stock',
+                'reorder_level',
+                'has_expiry',
+                'shelf_life_months',
+                'tax_percentage',
+                'image',
+                'description',
+                'status',
+                'sort_order',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
     }
 
     /*
@@ -231,4 +265,5 @@ class Medicine extends Model
             $medicine->current_stock = $medicine->opening_stock;
         });
     }
+
 }

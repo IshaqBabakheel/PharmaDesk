@@ -155,6 +155,284 @@
         @if (session('info'))
             toastr.info('{{ session('info') }}', 'Info');
         @endif
+
+
+        //notification script
+        // $(function () {
+        //     loadHeaderNotifications();
+
+        //     $('#markAllNotificationsRead').on('click', function (e) {
+        //         e.preventDefault();
+        //         e.stopPropagation();
+
+        //         $.ajax({
+        //             url: @json(route('notifications.read-all')),
+        //             type: 'PATCH',
+        //             data: {
+        //                 _token: @json(csrf_token())
+        //             },
+        //             success: function () {
+        //                 loadHeaderNotifications();
+        //             }
+        //         });
+        //     });
+
+        //     $(document).on('click', '.header-notification-link', function () {
+        //         const id = $(this).data('id');
+
+        //         $.ajax({
+        //             url: @json(url('/notifications')) + '/' + id + '/read',
+        //             type: 'PATCH',
+        //             data: {
+        //                 _token: @json(csrf_token())
+        //             }
+        //         });
+        //     });
+
+        //     function loadHeaderNotifications() {
+        //         $.ajax({
+        //             url: @json(route('notifications.unread')),
+        //             type: 'GET',
+        //             success: function (response) {
+        //                 updateNotificationBadge(response.count);
+        //                 renderNotifications(response.notifications);
+        //             },
+        //             error: function () {
+        //                 $('#headerNotificationList').html(`
+        //                     <div class="notifi__item">
+        //                         <div class="bg-c3 img-cir img-40">
+        //                             <i class="fa-solid fa-triangle-exclamation"></i>
+        //                         </div>
+        //                         <div class="content">
+        //                             <p>Unable to load notifications</p>
+        //                             <span class="date"></span>
+        //                         </div>
+        //                     </div>
+        //                 `);
+        //             }
+        //         });
+        //     }
+
+        //     function updateNotificationBadge(count) {
+        //         const badge = $('#notificationBadge');
+
+        //         if (count > 0) {
+        //             badge
+        //                 .text(count > 99 ? '99+' : count)
+        //                 .removeClass('d-none');
+        //         } else {
+        //             badge
+        //                 .text('0')
+        //                 .addClass('d-none');
+        //         }
+        //     }
+
+        //     function renderNotifications(notifications) {
+        //         const container = $('#headerNotificationList');
+
+        //         container.empty();
+
+        //         if (!notifications.length) {
+        //             container.html(`
+        //                 <div class="notifi__item">
+        //                     <div class="bg-c1 img-cir img-40">
+        //                         <i class="fa-regular fa-bell-slash"></i>
+        //                     </div>
+        //                     <div class="content">
+        //                         <p>No new notifications</p>
+        //                         <span class="date">You're all caught up</span>
+        //                     </div>
+        //                 </div>
+        //             `);
+
+        //             return;
+        //         }
+
+        //         notifications.forEach(function (notification) {
+        //             const item = `
+        //                 <div class="notifi__item">
+        //                     <div class="${notificationColor(notification.type)} img-cir img-40">
+        //                         <i class="${notificationIcon(notification.type)}"></i>
+        //                     </div>
+
+        //                     <div class="content">
+        //                         <p>
+        //                             <a
+        //                                 href="${escapeAttribute(notification.url)}"
+        //                                 class="header-notification-link"
+        //                                 data-id="${escapeAttribute(notification.id)}"
+        //                                 style="color: inherit; text-decoration: none;"
+        //                             >
+        //                                 ${escapeHtml(notification.title)}
+        //                             </a>
+        //                         </p>
+
+        //                         <span class="date">
+        //                             ${escapeHtml(notification.time || '')}
+        //                         </span>
+        //                     </div>
+        //                 </div>
+        //             `;
+
+        //             container.append(item);
+        //         });
+        //     }
+
+        //     function notificationIcon(type) {
+        //         switch (type) {
+        //             case 'low_stock':
+        //                 return 'fa-solid fa-box-open';
+
+        //             case 'expiry':
+        //                 return 'fa-solid fa-calendar-days';
+
+        //             case 'expired':
+        //                 return 'fa-solid fa-triangle-exclamation';
+
+        //             case 'customer_due':
+        //                 return 'fa-solid fa-user-clock';
+
+        //             case 'supplier_due':
+        //                 return 'fa-solid fa-truck-clock';
+
+        //             default:
+        //                 return 'fa-solid fa-bell';
+        //         }
+        //     }
+
+        //     function notificationColor(type) {
+        //         switch (type) {
+        //             case 'low_stock':
+        //                 return 'bg-c1';
+
+        //             case 'expiry':
+        //                 return 'bg-c2';
+
+        //             case 'expired':
+        //                 return 'bg-c3';
+
+        //             case 'customer_due':
+        //                 return 'bg-c2';
+
+        //             case 'supplier_due':
+        //                 return 'bg-c1';
+
+        //             default:
+        //                 return 'bg-c1';
+        //         }
+        //     }
+
+        //     function escapeHtml(value) {
+        //         return $('<div>').text(value ?? '').html();
+        //     }
+
+        //     function escapeAttribute(value) {
+        //         return String(value ?? '')
+        //             .replace(/&/g, '&amp;')
+        //             .replace(/"/g, '&quot;')
+        //             .replace(/</g, '&lt;')
+        //             .replace(/>/g, '&gt;');
+        //     }
+        // });
+        $(function () {
+
+    loadNotifications();
+
+    $('#notificationDropdown').on('click', function () {
+        loadNotifications();
+    });
+
+    function loadNotifications() {
+        $.get(
+            "{{ route('notifications.unread') }}",
+            function (response) {
+
+                updateBadge(response.count);
+
+                const container = $('#notificationList');
+
+                container.empty();
+
+                if (!response.notifications.length) {
+                    container.html(`
+                        <div class="text-center text-muted py-4">
+                            <i class="bi bi-bell-slash fs-4 d-block mb-2"></i>
+                            No new notifications.
+                        </div>
+                    `);
+
+                    return;
+                }
+
+                response.notifications.forEach(function (notification) {
+
+                    container.append(`
+                        <a
+                            href="${escapeAttribute(notification.url)}"
+                            class="dropdown-item text-wrap py-3 border-bottom notification-link"
+                            data-id="${escapeAttribute(notification.id)}"
+                        >
+                            <div class="fw-semibold">
+                                ${escapeHtml(notification.title)}
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                ${escapeHtml(notification.message)}
+                            </div>
+
+                            <div class="small text-secondary mt-1">
+                                ${escapeHtml(notification.time)}
+                            </div>
+                        </a>
+                    `);
+
+                });
+
+                $('.notification-link').on('click', function () {
+                    markRead($(this).data('id'));
+                });
+            }
+        );
+    }
+
+    function markRead(id) {
+        $.ajax({
+            url: "{{ url('/notifications') }}/" + id + "/read",
+            method: 'PATCH',
+            data: {
+                _token: "{{ csrf_token() }}"
+            }
+        });
+    }
+
+    function updateBadge(count) {
+        const badge = $('#notificationBadge');
+
+        if (count > 0) {
+            badge
+                .text(count > 99 ? '99+' : count)
+                .removeClass('d-none');
+        } else {
+            badge
+                .text('')
+                .addClass('d-none');
+        }
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value ?? '').html();
+    }
+
+    function escapeAttribute(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+});
+
     </script>
 </body>
 

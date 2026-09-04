@@ -453,22 +453,12 @@ class MedicinesController extends Controller
     public function destroy(Medicine $medicine)
     {
 
-        $medicine->update([
-
-            'deleted_by' => auth()->id(),
-
-        ]);
-
+        $medicine->deleted_by = auth()->id();
         $medicine->delete();
 
         return redirect()
-
             ->route('medicines.index')
-
-            ->with(
-                'success',
-                'Medicine deleted successfully.'
-            );
+            ->with('success', 'Medicine deleted successfully.');
     }
 
     /**

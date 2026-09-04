@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Sale extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
 
     protected $fillable = [
@@ -79,6 +80,27 @@ class Sale extends Model
 
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('sales')
+            ->logOnly([
+                'customer_id',
+                'sale_date',
+                'subtotal',
+                'discount',
+                'tax',
+                'grand_total',
+                'paid_amount',
+                'due_amount',
+                'payment_status',
+                'status',
+                'notes',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
+
 
 
 
@@ -141,28 +163,25 @@ class Sale extends Model
     public function getStatusBadgeAttribute()
     {
 
-        return match($this->status)
-        {
+        return match ($this->status) {
 
             'completed' =>
-                '<span class="badge bg-success">
+            '<span class="badge bg-success">
                     Completed
                 </span>',
 
 
             'cancelled' =>
-                '<span class="badge bg-danger">
+            '<span class="badge bg-danger">
                     Cancelled
                 </span>',
 
 
             default =>
-                '<span class="badge bg-warning text-dark">
+            '<span class="badge bg-warning text-dark">
                     Draft
                 </span>'
-
         };
-
     }
 
 
@@ -171,13 +190,12 @@ class Sale extends Model
     public function getPaymentStatusBadgeAttribute()
     {
 
-        return match($this->payment_status)
-        {
+        return match ($this->payment_status) {
 
 
             'paid' =>
 
-                '<span class="badge bg-success">
+            '<span class="badge bg-success">
                     Paid
                 </span>',
 
@@ -185,7 +203,7 @@ class Sale extends Model
 
             'partial' =>
 
-                '<span class="badge bg-warning text-dark">
+            '<span class="badge bg-warning text-dark">
                     Partial
                 </span>',
 
@@ -193,13 +211,10 @@ class Sale extends Model
 
             default =>
 
-                '<span class="badge bg-danger">
+            '<span class="badge bg-danger">
                     Due
                 </span>'
-
-
         };
-
     }
 
 
@@ -209,7 +224,6 @@ class Sale extends Model
     {
 
         return number_format($this->grand_total, 2);
-
     }
 
 
@@ -219,7 +233,6 @@ class Sale extends Model
     {
 
         return number_format($this->due_amount, 2);
-
     }
 
 
@@ -238,7 +251,6 @@ class Sale extends Model
     {
 
         return $this->status === 'draft';
-
     }
 
 
@@ -247,7 +259,6 @@ class Sale extends Model
     {
 
         return $this->status === 'completed';
-
     }
 
 
@@ -256,7 +267,6 @@ class Sale extends Model
     {
 
         return $this->status === 'cancelled';
-
     }
 
 
@@ -265,11 +275,5 @@ class Sale extends Model
     {
 
         return max($this->grand_total - $this->paid_amount, 0);
-
     }
-
-
 }
-
-
-

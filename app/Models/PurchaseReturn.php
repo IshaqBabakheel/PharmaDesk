@@ -4,47 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
 class PurchaseReturn extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
 
     protected $fillable = [
-
         'return_number',
-
         'purchase_id',
-
         'supplier_id',
-
         'return_date',
-
         'subtotal',
-
         'discount_type',
-
         'discount',
-
         'tax_type',
-
         'tax',
-
         'grand_total',
-
         'status',
-
         'stock_applied',
-
         'reason',
-
         'notes',
-
         'created_by',
-
         'updated_by',
-
         'deleted_by',
-
     ];
 
     protected $casts = [

@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Expense extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
 
     protected $fillable = [
         'expense_number',
@@ -34,6 +36,28 @@ class Expense extends Model
         'paid_amount' => 'decimal:2',
         'due_amount' => 'decimal:2',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('expenses')
+            ->logOnly([
+                'expense_category_id',
+                'expense_date',
+                'title',
+                'description',
+                'amount',
+                'paid_amount',
+                'due_amount',
+                'payment_status',
+                'status',
+                'payment_method',
+                'reference_number',
+                'notes',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
     protected static function booted(): void
     {
@@ -101,7 +125,7 @@ class Expense extends Model
     {
         return max(
             (float) $this->amount -
-            (float) $this->paid_amount,
+                (float) $this->paid_amount,
             0
         );
     }

@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Setting extends Model
 {
-    // use SoftDeletes;
+    use LogsActivity;
+    
     protected $fillable = [
         'key',
         'value',
@@ -35,4 +37,18 @@ class Setting extends Model
         );
 
     }
+
+    public function getActivitylogOptions(): LogOptions
+{
+    return LogOptions::defaults()
+        ->useLogName('settings')
+        ->logOnly([
+            'key',
+            'value',
+            'type',
+            'description',
+        ])
+        ->logOnlyDirty()
+        ->dontLogEmptyChanges();
+}
 }

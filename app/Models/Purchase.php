@@ -5,60 +5,39 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Purchase extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     /**
      * Mass assignable attributes.
      */
     protected $fillable = [
-
         'purchase_number',
-
         'invoice_number',
-
         'reference_number',
-
         'supplier_id',
-
         'purchase_date',
-
         'subtotal',
-
         'discount_type',
-
         'discount',
-
         'tax_type',
-
         'tax',
-
         'shipping',
-
         'other_charges',
-
         'grand_total',
-
         'paid_amount',
-
         'due_amount',
-
         'payment_status',
-
         'status',
-
         'stock_applied',
-
         'notes',
-
         'created_by',
-
         'updated_by',
-
         'deleted_by',
-
     ];
 
     /**
@@ -89,6 +68,27 @@ class Purchase extends Model
             'stock_applied' => 'boolean',
 
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('purchases')
+            ->logOnly([
+                'supplier_id',
+                'purchase_date',
+                'subtotal',
+                'discount',
+                'tax',
+                'grand_total',
+                'paid_amount',
+                'due_amount',
+                'payment_status',
+                'status',
+                'notes',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
     }
 
     /**

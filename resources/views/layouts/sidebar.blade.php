@@ -215,6 +215,19 @@
                     </a>
                 </li>
 
+                <li class="{{ request()->routeIs('audit-logs.*') ? 'active' : '' }}">
+                    <a href="{{ route('audit-logs.index') }}">
+                        <i class="fas fa-history"></i>Audit Logs
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('notifications.*') ? 'active' : '' }}">
+                    <a href="{{ route('notifications.index') }}">
+                        <i class="fas fa-bell"></i>Notifications
+                    </a>
+
+                </li>
+
             </ul>
         </nav>
     </div>

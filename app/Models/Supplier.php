@@ -5,59 +5,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Supplier extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     protected $fillable = [
-
         'supplier_code',
-
         'name',
-
         'company_name',
-
         'contact_person',
-
         'phone',
-
         'alternate_phone',
-
         'email',
-
         'website',
-
         'address',
-
         'city',
-
         'state',
-
         'country',
-
         'postal_code',
-
         'ntn',
-
         'strn',
-
         'opening_balance',
-
         'balance_type',
-
         'notes',
-
         'status',
-
         'sort_order',
-
         'created_by',
-
         'updated_by',
-
         'deleted_by',
-
     ];
 
     protected $casts = [
@@ -67,6 +45,22 @@ class Supplier extends Model
         'opening_balance'=>'decimal:2',
 
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('suppliers')
+            ->logOnly([
+                'name',
+                'company_name',
+                'phone',
+                'email',
+                'address',
+                'status',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
     protected static function booted()
     {

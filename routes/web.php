@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\ManufacturersController;
 use App\Http\Controllers\MedicineCategoriesController;
 use App\Http\Controllers\MedicinesController;
 use App\Http\Controllers\MedicineTypesController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PosController;
@@ -384,7 +386,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('expenses')->group(function () {
         Route::get('/',   [ExpenseController::class, 'index'])->name('expenses.index');
         Route::get('/datatable',   [ExpenseController::class, 'datatable'])->name('expenses.datatable');
-        Route::get('/statistics',[ExpenseController::class, 'statistics'])->name('expenses.statistics');
+        Route::get('/statistics', [ExpenseController::class, 'statistics'])->name('expenses.statistics');
         Route::get('/create',   [ExpenseController::class, 'create'])->name('expenses.create');
         Route::post('/store',  [ExpenseController::class, 'store'])->name('expenses.store');
         Route::patch('/{expense}/complete', [ExpenseController::class, 'complete'])->name('expenses.complete');
@@ -392,22 +394,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{expense}',   [ExpenseController::class, 'show'])->name('expenses.show');
         Route::get('/{expense}/edit',   [ExpenseController::class, 'edit'])->name('expenses.edit');
         Route::put('/{expense}',   [ExpenseController::class, 'update'])->name('expenses.update');
-        Route::delete('/{expense}',[ExpenseController::class, 'destroy'])->name('expenses.destroy');
+        Route::delete('/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
         Route::patch('/{id}/restore', [ExpenseController::class, 'restore'])->name('expenses.restore');
-        Route::delete('/{id}/force-delete',[ExpenseController::class, 'forceDelete'])->name('expenses.force-delete');
+        Route::delete('/{id}/force-delete', [ExpenseController::class, 'forceDelete'])->name('expenses.force-delete');
     });
 
     // Expense Category Routes
     Route::prefix('expense-categories')->group(function () {
-        Route::get('/',[ExpenseCategoryController::class, 'index'])->name('expense-categories.index');
-        Route::get('/datatable',[ExpenseCategoryController::class, 'datatable'])->name('expense-categories.datatable');
-        Route::get('/create',[ExpenseCategoryController::class, 'create'])->name('expense-categories.create');
-        Route::post('/store',[ExpenseCategoryController::class, 'store'])->name('expense-categories.store');
-        Route::get('/{expenseCategory}/edit',[ExpenseCategoryController::class, 'edit'])->name('expense-categories.edit');
-        Route::put('/{expenseCategory}',[ExpenseCategoryController::class, 'update'])->name('expense-categories.update');
-        Route::delete('/{expenseCategory}',[ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy');
-        Route::patch('/{id}/restore',[ExpenseCategoryController::class, 'restore'])->name('expense-categories.restore');
-        Route::delete('/{id}/force-delete',[ExpenseCategoryController::class, 'forceDelete'])->name('expense-categories.force-delete');
+        Route::get('/', [ExpenseCategoryController::class, 'index'])->name('expense-categories.index');
+        Route::get('/datatable', [ExpenseCategoryController::class, 'datatable'])->name('expense-categories.datatable');
+        Route::get('/create', [ExpenseCategoryController::class, 'create'])->name('expense-categories.create');
+        Route::post('/store', [ExpenseCategoryController::class, 'store'])->name('expense-categories.store');
+        Route::get('/{expenseCategory}/edit', [ExpenseCategoryController::class, 'edit'])->name('expense-categories.edit');
+        Route::put('/{expenseCategory}', [ExpenseCategoryController::class, 'update'])->name('expense-categories.update');
+        Route::delete('/{expenseCategory}', [ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy');
+        Route::patch('/{id}/restore', [ExpenseCategoryController::class, 'restore'])->name('expense-categories.restore');
+        Route::delete('/{id}/force-delete', [ExpenseCategoryController::class, 'forceDelete'])->name('expense-categories.force-delete');
     });
 
     // Stock Adjustment Routes
@@ -460,87 +462,91 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('payments')->group(function () {
         Route::get('/', [PaymentController::class, 'index'])->name('payments.index');
         Route::get('/datatable', [PaymentController::class, 'datatable'])->name('payments.datatable');
-        Route::get('/create',[PaymentController::class, 'create'])->name('payments.create');
-        Route::post('/store',[PaymentController::class, 'store'])->name('payments.store');
-        Route::get('/{payment}/edit',[PaymentController::class, 'edit'])->name('payments.edit');
+        Route::get('/create', [PaymentController::class, 'create'])->name('payments.create');
+        Route::post('/store', [PaymentController::class, 'store'])->name('payments.store');
+        Route::get('/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
         Route::get('/{payment}', [PaymentController::class, 'show'])->name('payments.show');
         Route::put('/{payment}', [PaymentController::class, 'update'])->name('payments.update');
-        Route::delete('/{payment}',[PaymentController::class, 'destroy'])->name('payments.destroy');
-        Route::patch('/{id}/restore',[PaymentController::class, 'restore'])->name('payments.restore');
-        Route::delete('/{id}/force-delete',[PaymentController::class, 'forceDelete'])->name('payments.force-delete');
+        Route::delete('/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+        Route::patch('/{id}/restore', [PaymentController::class, 'restore'])->name('payments.restore');
+        Route::delete('/{id}/force-delete', [PaymentController::class, 'forceDelete'])->name('payments.force-delete');
     });
 
     // Stock Ledger Routes
     Route::prefix('stock-ledger')->group(function () {
-        Route::get('/',[StockLedgerController::class, 'index'])->name('stock-ledger.index');
-        Route::get('/datatable',[StockLedgerController::class, 'datatable'])->name('stock-ledger.datatable');
-        Route::get('/medicine/{medicineId}',[StockLedgerController::class, 'medicine'])->name('stock-ledger.medicine');
-        Route::get('/medicine/{medicineId}/batch/{batchNumber}',[StockLedgerController::class, 'batch'])->name('stock-ledger.batch');
+        Route::get('/', [StockLedgerController::class, 'index'])->name('stock-ledger.index');
+        Route::get('/datatable', [StockLedgerController::class, 'datatable'])->name('stock-ledger.datatable');
+        Route::get('/medicine/{medicineId}', [StockLedgerController::class, 'medicine'])->name('stock-ledger.medicine');
+        Route::get('/medicine/{medicineId}/batch/{batchNumber}', [StockLedgerController::class, 'batch'])->name('stock-ledger.batch');
     });
 
     // Inventory Reports Routes
     Route::prefix('inventory-reports')->group(function () {
-        Route::get('/',[InventoryReportController::class, 'index'])->name('inventory-reports.index');
-        Route::get('/datatable',[InventoryReportController::class, 'datatable'])->name('inventory-reports.datatable');
-        Route::get('/statistics',[InventoryReportController::class, 'statistics'])->name('inventory-reports.statistics');
-        Route::get( '/medicine/{medicineId}', [InventoryReportController::class, 'medicine'] )->name('inventory-reports.medicine');
+        Route::get('/', [InventoryReportController::class, 'index'])->name('inventory-reports.index');
+        Route::get('/datatable', [InventoryReportController::class, 'datatable'])->name('inventory-reports.datatable');
+        Route::get('/statistics', [InventoryReportController::class, 'statistics'])->name('inventory-reports.statistics');
+        Route::get('/medicine/{medicineId}', [InventoryReportController::class, 'medicine'])->name('inventory-reports.medicine');
     });
 
     // Sales Reports Routes
     Route::prefix('sales-reports')->group(function () {
-        Route::get('/',[SalesReportController::class, 'index'])->name('sales-reports.index');
-        Route::get('/datatable',[SalesReportController::class, 'datatable'])->name('sales-reports.datatable');
-        Route::get('/statistics',[SalesReportController::class, 'statistics'])->name('sales-reports.statistics');
-        Route::get('/{saleId}',[SalesReportController::class, 'show'])->name('sales-reports.show');
-
+        Route::get('/', [SalesReportController::class, 'index'])->name('sales-reports.index');
+        Route::get('/datatable', [SalesReportController::class, 'datatable'])->name('sales-reports.datatable');
+        Route::get('/statistics', [SalesReportController::class, 'statistics'])->name('sales-reports.statistics');
+        Route::get('/{saleId}', [SalesReportController::class, 'show'])->name('sales-reports.show');
     });
 
     // Purchase Reports Routes
     Route::prefix('purchase-reports')->group(function () {
-        Route::get('/',[PurchaseReportController::class, 'index'])->name('purchase-reports.index');
-        Route::get('/datatable',[PurchaseReportController::class, 'datatable'])->name('purchase-reports.datatable');
-        Route::get('/statistics',[PurchaseReportController::class, 'statistics'])->name('purchase-reports.statistics');
-        Route::get('/{purchaseId}',[PurchaseReportController::class, 'show'])->name('purchase-reports.show');
+        Route::get('/', [PurchaseReportController::class, 'index'])->name('purchase-reports.index');
+        Route::get('/datatable', [PurchaseReportController::class, 'datatable'])->name('purchase-reports.datatable');
+        Route::get('/statistics', [PurchaseReportController::class, 'statistics'])->name('purchase-reports.statistics');
+        Route::get('/{purchaseId}', [PurchaseReportController::class, 'show'])->name('purchase-reports.show');
     });
 
     // Financial Reports Routes
     Route::prefix('financial-reports')->group(function () {
-        Route::get('/',[FinancialReportController::class, 'index'])->name('financial-reports.index');
-        Route::get('/summary',[FinancialReportController::class, 'summary'])->name('financial-reports.summary');
-        Route::get('/datatable',[FinancialReportController::class, 'datatable'])->name('financial-reports.datatable');
+        Route::get('/', [FinancialReportController::class, 'index'])->name('financial-reports.index');
+        Route::get('/summary', [FinancialReportController::class, 'summary'])->name('financial-reports.summary');
+        Route::get('/datatable', [FinancialReportController::class, 'datatable'])->name('financial-reports.datatable');
     });
 
     // Profit & Loss Routes
     Route::prefix('profit-loss')->group(function () {
-        Route::get('/',[ProfitLossController::class, 'index'])->name('profit-loss.index');
-        Route::get('/summary',[ProfitLossController::class, 'summary'])->name('profit-loss.summary');
-        Route::get('/monthly',[ProfitLossController::class, 'monthly'])->name('profit-loss.monthly');
+        Route::get('/', [ProfitLossController::class, 'index'])->name('profit-loss.index');
+        Route::get('/summary', [ProfitLossController::class, 'summary'])->name('profit-loss.summary');
+        Route::get('/monthly', [ProfitLossController::class, 'monthly'])->name('profit-loss.monthly');
     });
 
     //Receipt Routes
     Route::prefix('sales/{sale}/receipt')->group(function () {
-        Route::get('/a4',[ReceiptController::class, 'a4'])->name('sales.receipt.a4');
-        Route::get('/thermal',[ReceiptController::class, 'thermal'])->name('sales.receipt.thermal');
+        Route::get('/a4', [ReceiptController::class, 'a4'])->name('sales.receipt.a4');
+        Route::get('/thermal', [ReceiptController::class, 'thermal'])->name('sales.receipt.thermal');
     });
 
     // Backup Routes
     Route::prefix('backups')->group(function () {
-        Route::get('/',[BackupController::class, 'index'])->name('backups.index');
-        Route::post('/create',[BackupController::class, 'create'])->name('backups.create');
-        Route::get('/download/{filename}',[BackupController::class, 'download'])->name('backups.download');
-        Route::delete('/{filename}',[BackupController::class, 'destroy'])->name('backups.destroy');
+        Route::get('/', [BackupController::class, 'index'])->name('backups.index');
+        Route::post('/create', [BackupController::class, 'create'])->name('backups.create');
+        Route::post('/cleanup', [BackupController::class, 'cleanup'])->name('backups.cleanup');
+        Route::post('/{filename}/restore', [BackupController::class, 'restore'])->name('backups.restore');
+        Route::get('/{filename}/details', [BackupController::class, 'show'])->name('backups.show');
+        Route::get('/download/{filename}', [BackupController::class, 'download'])->name('backups.download');
+        Route::delete('/{filename}', [BackupController::class, 'destroy'])->name('backups.destroy');
     });
 
-    Route::get('/debug-temp', function () {
-    $file = tmpfile();
+    // Audit Logs Routes
+    Route::prefix('audit-logs')->name('audit-logs.')->group(function () {
+        Route::get('/', [AuditLogController::class, 'index'])->name('index');
+        Route::get('/datatable', [AuditLogController::class, 'datatable'])->name('datatable');
+        Route::get('/{id}', [AuditLogController::class, 'show'])->name('show');
+    });
 
-    return [
-        'temp_dir' => sys_get_temp_dir(),
-        'temp_file' => $file
-            ? stream_get_meta_data($file)['uri']
-            : null,
-        'env_temp' => getenv('TEMP'),
-        'env_tmp' => getenv('TMP'),
-    ];
-});
+
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/unread', [NotificationController::class, 'unread'])->name('unread');
+        Route::patch('/{id}/read', [NotificationController::class, 'markAsRead'])->name('read');                                                 
+        Route::patch('/read-all', [NotificationController::class, 'markAllAsRead'])->name('read-all');
+    });
 });

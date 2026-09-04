@@ -6,58 +6,37 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Customer extends Model
 {
 
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
 
 
     protected $fillable = [
-
         'name',
-
         'phone',
-
         'email',
-
         'gender',
-
         'date_of_birth',
-
         'address',
-
         'city',
-
         'state',
-
         'country',
-
         'customer_type',
-
         'credit_limit',
-
         'opening_balance',
-
         'balance_type',
-
         'blood_group',
-
         'allergies',
-
         'notes',
-
         'created_by',
-
         'updated_by',
-
         'deleted_by',
     ];
-
-
 
 
 
@@ -67,10 +46,21 @@ class Customer extends Model
         'opening_balance'=> 'decimal:2',
     ];
 
-
-
-
-
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('customers')
+            ->logOnly([
+                'name',
+                'phone',
+                'email',
+                'address',
+                'credit_limit',
+                'status',
+            ])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges();
+    }
 
 
     /*

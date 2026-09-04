@@ -215,6 +215,19 @@
                     </a>
                 </li>
 
+                <li class="<?php echo e(request()->routeIs('audit-logs.*') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('audit-logs.index')); ?>">
+                        <i class="fas fa-history"></i>Audit Logs
+                    </a>
+                </li>
+
+                <li class="<?php echo e(request()->routeIs('notifications.*') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('notifications.index')); ?>">
+                        <i class="fas fa-bell"></i>Notifications
+                    </a>
+
+                </li>
+
             </ul>
         </nav>
     </div>
