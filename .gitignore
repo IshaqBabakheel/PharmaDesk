@@ -1,10 +1,40 @@
+# *.log
+# .DS_Store
+# .env
+# .env.backup
+# .env.production
+# .phpactor.json
+# .phpunit.result.cache
+# /.codex
+# /.cursor/
+# /.idea
+# /.nova
+# /.phpunit.cache
+# /.vscode
+# /.zed
+# /auth.json
+# /node_modules
+# /public/build
+# /public/fonts-manifest.dev.json
+# /public/hot
+# /public/storage
+# /storage/*.key
+# /storage/pail
+# /vendor
+# _ide_helper.php
+# Homestead.json
+# Homestead.yaml
+# Thumbs.db
 *.log
 .DS_Store
+
 .env
 .env.backup
 .env.production
+
 .phpactor.json
 .phpunit.result.cache
+
 /.codex
 /.cursor/
 /.idea
@@ -12,16 +42,99 @@
 /.phpunit.cache
 /.vscode
 /.zed
+
 /auth.json
 /node_modules
+
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
 /public/storage
+
 /storage/*.key
 /storage/pail
+
 /vendor
+
 _ide_helper.php
+
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+
+# =========================================================
+# PharmaDesk local database/runtime data
+# =========================================================
+
+/storage/mysql-data/
+/storage/pharmadesk.sql
+
+
+# =========================================================
+# Electron desktop generated builds
+# =========================================================
+
+/desktop/node_modules/
+/desktop/dist/
+/desktop/.cache/
+
+
+# =========================================================
+# Local desktop/update test files
+# =========================================================
+
+/desktop/*.log
+
+
+# =========================================================
+# Local PHP/MySQL runtime data
+# =========================================================
+
+/runtime/mysql/data/
+/runtime/mysql/tmp/
+
+
+# =========================================================
+# Local development/update artifacts
+# =========================================================
+
+/.phpunit.result.cache
+
+# =========================================================
+# Laravel generated/runtime files
+# =========================================================
+
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+/storage/app/backup-temp/*
+/storage/app/private/PharmaDesk/*
+
+
+# =========================================================
+# PharmaDesk local database
+# =========================================================
+
+/storage/mysql-data/
+/storage/pharmadesk.sql
+
+
+# =========================================================
+# Electron desktop generated files
+# =========================================================
+
+/desktop/node_modules/
+/desktop/dist/
+/desktop/*.log
+/desktop/.cache/
+
+
+# =========================================================
+# Local runtime backups
+# =========================================================
+
+/runtime-backup/

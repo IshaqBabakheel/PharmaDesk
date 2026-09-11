@@ -67,7 +67,6 @@
                             </div>
                         </div>
                     </div> --}}
-                    @auth
                     <div class="dropdown">
 
                         <button
@@ -109,7 +108,6 @@
                         </div>
 
                     </div>
-                    @endauth
 
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu" role="button" tabindex="0"

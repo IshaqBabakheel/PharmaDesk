@@ -1,0 +1,93 @@
+{
+    "name": "pharmadesk-desktop",
+    "version": "1.0.2",
+    "description": "PharmaDesk Pharmacy Management System",
+    "main": "main.js",
+    "author": "Lishaq Solutions",
+    "license": "Proprietary",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:win": "electron-builder --win"
+    },
+    "devDependencies": {
+        "electron": "^44.2.0",
+        "electron-builder": "^26.15.3"
+    },
+    "build": {
+        "appId": "com.lishaqsolutions.pharmadesk",
+        "productName": "PharmaDesk",
+        "artifactName": "PharmaDesk-Setup-${version}.${ext}",
+        "asar": true,
+        "directories": {
+            "output": "dist"
+        },
+        "publish": {
+            "provider": "generic",
+            "url": "http://127.0.0.1:18080/"
+        },
+        "files": [
+            "**/*",
+            "!dist/**"
+        ],
+        "extraResources": [
+            {
+                "from": "../",
+                "to": "laravel",
+                "filter": [
+                    "**/*",
+                    ".env",
+                    "bootstrap/cache/.keep",
+                    "!desktop/**",
+                    "!runtime/**",
+                    "!storage/mysql-data/**",
+                    "!storage/pharmadesk.sql",
+                    "!node_modules/**",
+                    "!.git/**"
+                ]
+            },
+            {
+                "from": "../runtime/php",
+                "to": "runtime/php",
+                "filter": [
+                    "**/*"
+                ]
+            },
+            {
+                "from": "../runtime/mysql",
+                "to": "runtime/mysql",
+                "filter": [
+                    "**/*"
+                ]
+            },
+            {
+                "from": "../storage/mysql-data",
+                "to": "initial-data/mysql-data",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "verifyUpdateCodeSignature": false
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "PharmaDesk"
+        }
+    },
+    "dependencies": {
+        "electron-updater": "6.8.9"
+    }
+}

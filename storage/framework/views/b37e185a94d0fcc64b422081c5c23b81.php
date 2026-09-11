@@ -30,50 +30,192 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.bootstrap5.css">
     <style>
-        /* Active state for filter buttons */
-        .btn-group .filter-btn.active {
-            background-color: #0d6efd;
-            color: #fff;
-            border-color: #0d6efd;
-        }
-
-        .btn-group .filter-btn.active.btn-outline-success {
-            background-color: #198754;
-            color: #fff;
-            border-color: #198754;
-        }
-
-        .btn-group .filter-btn.active.btn-outline-warning {
-            background-color: #ffc107;
-            color: #000;
-            border-color: #ffc107;
-        }
-
-        /* Add to your stylesheet */
-        .navbar__list li.active {
-            background: linear-gradient(90deg, rgba(79, 70, 229, 0.2) 0%, transparent 100%);
-            border-radius: 8px;
-            position: relative;
-        }
-
-        .navbar__list li.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
+        /* Sidebar Styles */
+        .menu-sidebar {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            height: 100vh;
+            position: fixed;
             top: 0;
-            height: 100%;
-            width: 4px;
-            background: #4F46E5;
-            border-radius: 0 4px 4px 0;
+            left: 0;
+            width: 260px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
         }
 
-        .navbar__list li.active a {
+        .navbar__list {
+            padding: 5px 0 20px 0;
+            margin: 0;
+        }
+
+        /* Section Labels */
+        .navbar__list .section-label {
+            padding: 10px 16px 4px 16px;
+            margin-top: 6px;
+            cursor: default;
+            pointer-events: none;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .navbar__list .section-label span {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 5px;
+        }
+
+        /* Menu Items */
+        .navbar__list li:not(.section-label) {
+            list-style: none;
+            margin: 1px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .navbar__list li:not(.section-label) a {
+            display: flex;
+            align-items: center;
+            padding: 7px 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 12.5px;
+            font-weight: 400;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            gap: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .navbar__list li:not(.section-label) a i {
+            width: 18px;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.35);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .navbar__list li:not(.section-label) a span {
+            flex: 1;
+            font-size: 12.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Active State */
+        .navbar__list li:not(.section-label).active > a {
             color: #ffffff;
-            font-weight: 600;
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.2) 0%, rgba(79, 70, 229, 0.05) 100%);
+            border-left: 3px solid #4F46E5;
+            padding-left: 9px;
         }
 
-        .navbar__list li.active i {
+        .navbar__list li:not(.section-label).active > a i {
             color: #818CF8;
+        }
+
+        /* Hover State */
+        .navbar__list li:not(.section-label) a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .navbar__list li:not(.section-label) a:hover i {
+            color: #818CF8;
+        }
+
+        /* Scrollbar Styling */
+        .menu-sidebar__content {
+            height: calc(100vh - 110px);
+            overflow-y: auto;
+            padding-bottom: 30px;
+            scroll-behavior: smooth;
+        }
+
+        .menu-sidebar__content::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .menu-sidebar__content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .menu-sidebar__content::-webkit-scrollbar-thumb {
+            background: rgba(79, 70, 229, 0.4);
+            border-radius: 10px;
+        }
+
+        .menu-sidebar__content::-webkit-scrollbar-thumb:hover {
+            background: rgba(79, 70, 229, 0.6);
+        }
+
+        /* Logo */
+        .logo {
+            background: transparent;
+            padding: 15px 15px 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-link {
+            display: block;
+        }
+
+        .logo-link div {
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .logo-link div:hover {
+            transform: scale(1.02);
+        }
+
+        /* Sidebar Close Button */
+        .sidebar-close {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-sidebar {
+                width: 240px;
+            }
+            
+            .sidebar-close {
+                display: block;
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            
+            .navbar__list li:not(.section-label) a {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            
+            .navbar__list .section-label {
+                padding: 8px 12px 3px 12px;
+            }
+            
+            .navbar__list .section-label span {
+                font-size: 9px;
+            }
         }
     </style>
     <?php echo $__env->yieldPushContent('css'); ?>
@@ -336,103 +478,240 @@
         // });
         $(function () {
 
-    loadNotifications();
+            loadNotifications();
 
-    $('#notificationDropdown').on('click', function () {
-        loadNotifications();
-    });
+            $('#notificationDropdown').on('click', function () {
+                loadNotifications();
+            });
 
-    function loadNotifications() {
-        $.get(
-            "<?php echo e(route('notifications.unread')); ?>",
-            function (response) {
+            function loadNotifications() {
+                $.get(
+                    "<?php echo e(route('notifications.unread')); ?>",
+                    function (response) {
 
-                updateBadge(response.count);
+                        updateBadge(response.count);
 
-                const container = $('#notificationList');
+                        const container = $('#notificationList');
 
-                container.empty();
+                        container.empty();
 
-                if (!response.notifications.length) {
-                    container.html(`
-                        <div class="text-center text-muted py-4">
-                            <i class="bi bi-bell-slash fs-4 d-block mb-2"></i>
-                            No new notifications.
-                        </div>
-                    `);
+                        if (!response.notifications.length) {
+                            container.html(`
+                                <div class="text-center text-muted py-4">
+                                    <i class="bi bi-bell-slash fs-4 d-block mb-2"></i>
+                                    No new notifications.
+                                </div>
+                            `);
 
-                    return;
+                            return;
+                        }
+
+                        response.notifications.forEach(function (notification) {
+
+                            container.append(`
+                                <a
+                                    href="${escapeAttribute(notification.url)}"
+                                    class="dropdown-item text-wrap py-3 border-bottom notification-link"
+                                    data-id="${escapeAttribute(notification.id)}"
+                                >
+                                    <div class="fw-semibold">
+                                        ${escapeHtml(notification.title)}
+                                    </div>
+
+                                    <div class="small text-muted mt-1">
+                                        ${escapeHtml(notification.message)}
+                                    </div>
+
+                                    <div class="small text-secondary mt-1">
+                                        ${escapeHtml(notification.time)}
+                                    </div>
+                                </a>
+                            `);
+
+                        });
+
+                        $('.notification-link').on('click', function () {
+                            markRead($(this).data('id'));
+                        });
+                    }
+                );
+            }
+
+            function markRead(id) {
+                $.ajax({
+                    url: "<?php echo e(url('/notifications')); ?>/" + id + "/read",
+                    method: 'PATCH',
+                    data: {
+                        _token: "<?php echo e(csrf_token()); ?>"
+                    }
+                });
+            }
+
+            function updateBadge(count) {
+                const badge = $('#notificationBadge');
+
+                if (count > 0) {
+                    badge
+                        .text(count > 99 ? '99+' : count)
+                        .removeClass('d-none');
+                } else {
+                    badge
+                        .text('')
+                        .addClass('d-none');
                 }
-
-                response.notifications.forEach(function (notification) {
-
-                    container.append(`
-                        <a
-                            href="${escapeAttribute(notification.url)}"
-                            class="dropdown-item text-wrap py-3 border-bottom notification-link"
-                            data-id="${escapeAttribute(notification.id)}"
-                        >
-                            <div class="fw-semibold">
-                                ${escapeHtml(notification.title)}
-                            </div>
-
-                            <div class="small text-muted mt-1">
-                                ${escapeHtml(notification.message)}
-                            </div>
-
-                            <div class="small text-secondary mt-1">
-                                ${escapeHtml(notification.time)}
-                            </div>
-                        </a>
-                    `);
-
-                });
-
-                $('.notification-link').on('click', function () {
-                    markRead($(this).data('id'));
-                });
             }
-        );
-    }
 
-    function markRead(id) {
-        $.ajax({
-            url: "<?php echo e(url('/notifications')); ?>/" + id + "/read",
-            method: 'PATCH',
-            data: {
-                _token: "<?php echo e(csrf_token()); ?>"
+            function escapeHtml(value) {
+                return $('<div>').text(value ?? '').html();
             }
+
+            function escapeAttribute(value) {
+                return String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
         });
-    }
 
-    function updateBadge(count) {
-        const badge = $('#notificationBadge');
+        $(document).ready(function() {
+    
+            // ============================================
+            // 1. AUTO-SCROLL TO ACTIVE ITEM
+            // ============================================
+            function scrollToActiveItem() {
+                var sidebarContent = $('.menu-sidebar__content');
+                var activeItem = $('.navbar__list li.active');
+                
+                if (activeItem.length) {
+                    // Get the position of the active item within the sidebar
+                    var itemTop = activeItem[0].offsetTop;
+                    var itemHeight = activeItem.outerHeight();
+                    var containerHeight = sidebarContent.height();
+                    
+                    // Calculate scroll position (center the item if possible)
+                    var scrollPosition = itemTop - (containerHeight / 2) + (itemHeight / 2);
+                    
+                    // Ensure we don't scroll past the bottom
+                    var maxScroll = sidebarContent[0].scrollHeight - containerHeight;
+                    scrollPosition = Math.min(scrollPosition, maxScroll);
+                    scrollPosition = Math.max(scrollPosition, 0);
+                    
+                    // Check if the item is already visible
+                    var currentScroll = sidebarContent.scrollTop();
+                    var itemVisible = (itemTop >= currentScroll && itemTop <= currentScroll + containerHeight - itemHeight);
+                    
+                    if (!itemVisible) {
+                        // Smooth scroll to the active item
+                        sidebarContent.animate({
+                            scrollTop: scrollPosition
+                        }, 400, 'swing');
+                    }
+                }
+            }
+            
+            // ============================================
+            // 2. INITIALIZE ON PAGE LOAD
+            // ============================================
+            // Wait for everything to render
+            setTimeout(function() {
+                scrollToActiveItem();
+            }, 300);
+            
+            // Also scroll after fonts and images load
+            $(window).on('load', function() {
+                setTimeout(function() {
+                    scrollToActiveItem();
+                }, 200);
+            });
+            
+            // ============================================
+            // 3. HANDLE WINDOW RESIZE
+            // ============================================
+            var resizeTimer;
+            $(window).on('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    scrollToActiveItem();
+                }, 250);
+            });
+            
+            // ============================================
+            // 4. HANDLE DYNAMIC CONTENT CHANGES
+            // ============================================
+            // Listen for changes in the sidebar (for dynamic content)
+            var observer = new MutationObserver(function() {
+                scrollToActiveItem();
+            });
+            
+            var sidebarContent = document.querySelector('.menu-sidebar__content');
+            if (sidebarContent) {
+                observer.observe(sidebarContent, {
+                    childList: true,
+                    subtree: true,
+                    attributes: false
+                });
+            }
+            
+            // ============================================
+            // 5. ACTIVE STATE MANAGEMENT
+            // ============================================
+            // When clicking a menu item, ensure proper active state
+            $('.navbar__list li:not(.section-label) a').on('click', function() {
+                var parentLi = $(this).closest('li');
+                var parentUl = parentLi.closest('ul');
+                
+                // Remove active from siblings
+                parentUl.find('> li').not(parentLi).removeClass('active');
+                
+                // Add active to current
+                parentLi.addClass('active');
+            });
+            
+            // ============================================
+            // 6. KEYBOARD NAVIGATION (Accessibility)
+            // ============================================
+            $('.navbar__list li:not(.section-label) a').on('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.location.href = $(this).attr('href');
+                }
+            });
+            
+            // ============================================
+            // 7. TOGGLE SIDEBAR ON MOBILE
+            // ============================================
+            $('.js-sidebar-toggle').on('click', function() {
+                $('.menu-sidebar').toggleClass('sidebar-open');
+            });
+        });
 
-        if (count > 0) {
-            badge
-                .text(count > 99 ? '99+' : count)
-                .removeClass('d-none');
-        } else {
-            badge
-                .text('')
-                .addClass('d-none');
+        // ============================================
+        // 8. UTILITY FUNCTION (Globally Available)
+        // ============================================
+        function scrollSidebarToActive() {
+            setTimeout(function() {
+                var sidebarContent = $('.menu-sidebar__content');
+                var activeItem = $('.navbar__list li.active');
+                
+                if (activeItem.length) {
+                    var itemTop = activeItem[0].offsetTop;
+                    var containerHeight = sidebarContent.height();
+                    var itemHeight = activeItem.outerHeight();
+                    var scrollPosition = itemTop - (containerHeight / 2) + (itemHeight / 2);
+                    var maxScroll = sidebarContent[0].scrollHeight - containerHeight;
+                    scrollPosition = Math.min(scrollPosition, maxScroll);
+                    scrollPosition = Math.max(scrollPosition, 0);
+                    
+                    sidebarContent.animate({
+                        scrollTop: scrollPosition
+                    }, 400);
+                }
+            }, 100);
         }
-    }
 
-    function escapeHtml(value) {
-        return $('<div>').text(value ?? '').html();
-    }
-
-    function escapeAttribute(value) {
-        return String(value ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    }
-
-});
-
+        window.scrollSidebarToActive = scrollSidebarToActive;
     </script>
 </body>
 

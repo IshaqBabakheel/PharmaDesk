@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpiryController;
@@ -44,7 +45,8 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::get('/medicine-categories', [MedicineCategoriesController::class, 'index'])->name('medicine-categories.index');

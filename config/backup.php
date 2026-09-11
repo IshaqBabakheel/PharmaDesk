@@ -35,9 +35,16 @@ return [
                  *
                  * Directories used by the backup process will automatically be excluded.
                  */
+                // 'exclude' => [
+                //     base_path('vendor'),
+                //     base_path('node_modules'),
+                //     storage_path('framework'),
+                // ],
                 'exclude' => [
                     base_path('vendor'),
                     base_path('node_modules'),
+                    base_path('desktop'),
+                    base_path('runtime'),
                     storage_path('framework'),
                 ],
 
@@ -56,7 +63,8 @@ return [
                  * Set to `null` to include complete absolute path
                  * Example: base_path()
                  */
-                'relative_path' => null,
+                // 'relative_path' => null,
+                'relative_path' => base_path(),
             ],
 
             /*

@@ -59,10 +59,16 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
+            // 'dump' => [
+            //     'add_extra_options' => '--protocol=TCP --host=127.0.0.1 --port=3306',
+            //     'useSingleTransaction' => true,
+            //     'dump_binary_path' => 'C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin', // use forward slashes
+            // ],
             'dump' => [
-                'add_extra_options' => '--protocol=TCP --host=127.0.0.1 --port=3306',
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH'),
                 'useSingleTransaction' => true,
-                'dump_binary_path' => 'C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin', // use forward slashes
+                'timeout' => 600,
+                'add_extra_option' => '--protocol=TCP',
             ],
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),

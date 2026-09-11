@@ -8,171 +8,6 @@ use Spatie\Backup\BackupDestination\BackupDestination;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-// class BackupService
-// {
-
-
-//     public function create(): string
-//     {
-//         $php = env(
-//             'PHP_CLI_BINARY',
-//             PHP_BINARY
-//         );
-
-//         $process = new Process([
-//             $php,
-//             base_path('artisan'),
-//             'backup:run',
-//         ], base_path());
-
-//         $process->setTimeout(600);
-
-//         $process->run();
-
-//         if (!$process->isSuccessful()) {
-//             throw new \RuntimeException(
-//                 trim(
-//                     $process->getErrorOutput()
-//                     ?: $process->getOutput()
-//                     ?: 'Backup failed.'
-//                 )
-//             );
-//         }
-
-//         return trim(
-//             $process->getOutput()
-//         );
-//     }
-
-//     public function backups(): Collection
-//     {
-//         $diskNames = config('backup.backup.destination.disks', ['local']);
-
-//         return collect($diskNames)
-//             ->flatMap(function ($diskName) {
-
-//                 $destination =
-//                     BackupDestination::create(
-//                         $diskName,
-//                         config('backup.backup.name')
-//                     );
-
-//                 return collect(
-//                     $destination->backups()
-//                 )->map(function ($backup) {
-
-//                     $size = $backup->sizeInBytes();
-
-//                     return [
-//                         'path' => $backup->path(),
-//                         'filename' => basename($backup->path()),
-//                         'size' => $size,
-//                         'size_human' =>  $this->humanSize($size),
-//                         'date' => $backup->date()?->format('d M Y H:i'),
-//                     ];
-//                 });
-//             })
-//             ->sortByDesc('date')
-//             ->values();
-//     }
-
-
-//     public function download(string $filename)
-//     {
-//         $backup = $this->findBackup($filename);
-
-//         abort_unless($backup, 404);
-
-//         $path = $backup->disk()->path($backup->path());
-
-//         abort_unless(
-//             file_exists($path),
-//             404,
-//             'Backup file not found.'
-//         );
-
-//         return response()->download(
-//             $path,
-//             basename($backup->path()),
-//             [
-//                 'Content-Type' => 'application/zip',
-//             ]
-//         );
-//     }
-
-
-//     public function delete(string $filename): void
-//     {
-//         $backup = $this->findBackup($filename);
-
-//         abort_unless($backup, 404);
-
-//         $backup->delete();
-//     }
-
-//     protected function findBackup(string $filename) 
-//     {
-//         foreach (
-//             config(
-//                 'backup.backup.destination.disks',
-//                 ['local']
-//             ) as $diskName
-//         ) {
-
-//             $destination =
-//                 BackupDestination::create(
-//                     $diskName,
-//                     config('backup.backup.name')
-//                 );
-
-//             $backup =
-//                 collect(
-//                     $destination->backups()
-//                 )->first(
-//                     fn ($backup) =>
-//                     basename(
-//                         $backup->path()
-//                     ) === $filename
-//                 );
-
-//             if ($backup) {
-//                 return $backup;
-//             }
-//         }
-
-//         return null;
-//     }
-
-//     protected function humanSize(int|float $bytes): string 
-//     {
-//         if ($bytes <= 0) {
-//             return '0 B';
-//         }
-
-//         $units = [
-//             'B',
-//             'KB',
-//             'MB',
-//             'GB',
-//             'TB',
-//         ];
-
-//         $index = min(
-//             (int) floor(
-//                 log($bytes, 1024)
-//             ),
-//             count($units) - 1
-//         );
-
-//         return number_format(
-//             $bytes / pow(1024, $index),
-//             2
-//         ) . ' ' . $units[$index];
-//     }
-// }
-
-
-
 class BackupService
 {
     /**
@@ -180,16 +15,41 @@ class BackupService
      */
     public function create(): string
     {
-        $php = env(
-            'PHP_CLI_BINARY',
-            PHP_BINARY
-        );
+        $php = PHP_BINARY;
 
-        $process = new Process([
-            $php,
-            base_path('artisan'),
-            'backup:run',
-        ], base_path());
+        /*
+     * Pass the complete current process environment to the
+     * child PHP process, then explicitly enforce the two
+     * desktop-specific runtime paths.
+     *
+     * This is important because Electron provides these
+     * variables when it starts Laravel.
+     */
+        $environment = [];
+
+        foreach (getenv() as $key => $value) {
+            if (is_string($value)) {
+                $environment[$key] = $value;
+            }
+        }
+
+        $environment['LARAVEL_STORAGE_PATH'] = storage_path();
+
+        $dumpBinaryPath = getenv('DB_DUMP_BINARY_PATH');
+
+        if (is_string($dumpBinaryPath) && $dumpBinaryPath !== '') {
+            $environment['DB_DUMP_BINARY_PATH'] = $dumpBinaryPath;
+        }
+
+        $process = new Process(
+            [
+                $php,
+                base_path('artisan'),
+                'backup:run',
+            ],
+            base_path(),
+            $environment
+        );
 
         $process->setTimeout(600);
 
@@ -201,6 +61,57 @@ class BackupService
                     $process->getErrorOutput()
                         ?: $process->getOutput()
                         ?: 'Backup failed.'
+                )
+            );
+        }
+
+        return trim($process->getOutput());
+    }
+
+    /**
+     * Create a database-only safety backup before a restore.
+     */
+    public function createDatabaseSafetyBackup(): string
+    {
+        $php = PHP_BINARY;
+
+        $environment = [];
+
+        foreach (getenv() as $key => $value) {
+            if (is_string($value)) {
+                $environment[$key] = $value;
+            }
+        }
+
+        $environment['LARAVEL_STORAGE_PATH'] = storage_path();
+
+        $dumpBinaryPath = getenv('DB_DUMP_BINARY_PATH');
+
+        if (is_string($dumpBinaryPath) && $dumpBinaryPath !== '') {
+            $environment['DB_DUMP_BINARY_PATH'] = $dumpBinaryPath;
+        }
+
+        $process = new Process(
+            [
+                $php,
+                base_path('artisan'),
+                'backup:run',
+                '--only-db',
+            ],
+            base_path(),
+            $environment
+        );
+
+        $process->setTimeout(600);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException(
+                trim(
+                    $process->getErrorOutput()
+                        ?: $process->getOutput()
+                        ?: 'Database safety backup failed.'
                 )
             );
         }
@@ -540,8 +451,8 @@ class BackupService
 
         try {
 
-            $safetyBackupOutput =
-                $this->create();
+            // $safetyBackupOutput = $this->create();
+            $safetyBackupOutput = $this->createDatabaseSafetyBackup();
         } catch (\Throwable $e) {
 
             report($e);
@@ -555,24 +466,41 @@ class BackupService
          * Step 2:
          * Restore using the official restore command.
          */
-        $php = env(
-            'PHP_CLI_BINARY',
-            PHP_BINARY
-        );
+        $php = PHP_BINARY;
 
         $connection =
             config('database.default');
 
-        $process = new Process([
-            $php,
-            base_path('artisan'),
-            'backup:restore',
-            '--disk=' . $disk,
-            '--backup=' . $backup->path(),
-            '--connection=' . $connection,
-            '--reset',
-            '--no-interaction',
-        ], base_path());
+        $environment = [];
+
+        foreach (getenv() as $key => $value) {
+            if (is_string($value)) {
+                $environment[$key] = $value;
+            }
+        }
+
+        $environment['LARAVEL_STORAGE_PATH'] = storage_path();
+
+        $dumpBinaryPath = getenv('DB_DUMP_BINARY_PATH');
+
+        if (is_string($dumpBinaryPath) && $dumpBinaryPath !== '') {
+            $environment['DB_DUMP_BINARY_PATH'] = $dumpBinaryPath;
+        }
+
+        $process = new Process(
+            [
+                $php,
+                base_path('artisan'),
+                'backup:restore',
+                '--disk=' . $disk,
+                '--backup=' . $backup->path(),
+                '--connection=' . $connection,
+                '--reset',
+                '--no-interaction',
+            ],
+            base_path(),
+            $environment
+        );
 
         $process->setTimeout(1200);
 
@@ -612,46 +540,44 @@ class BackupService
             ];
         }
 
-        /*
-         * Step 4:
-         * Clear Laravel caches after the database
-         * has been restored.
-         */
-        $clearProcess = new Process([
-            $php,
-            base_path('artisan'),
-            'optimize:clear',
-        ], base_path());
+        // /*
+        //  * Step 4:
+        //  * Clear Laravel caches after the database
+        //  * has been restored.
+        //  */
+        // $clearProcess = new Process([
+        //     $php,
+        //     base_path('artisan'),
+        //     'optimize:clear',
+        // ], base_path());
 
-        $clearProcess->setTimeout(120);
+        // $clearProcess->setTimeout(120);
 
-        $clearProcess->run();
+        // $clearProcess->run();
 
-        if (!$clearProcess->isSuccessful()) {
+        // if (!$clearProcess->isSuccessful()) {
 
-            Log::warning(
-                'PharmaDesk database restored but Laravel cache clearing failed.',
-                [
-                    'filename' =>
-                    $filename,
+        //     Log::warning(
+        //         'PharmaDesk database restored but Laravel cache clearing failed.',
+        //         [
+        //             'filename' =>
+        //             $filename,
 
-                    'output' =>
-                    $clearProcess->getOutput(),
+        //             'output' =>
+        //             $clearProcess->getOutput(),
 
-                    'error' =>
-                    $clearProcess->getErrorOutput(),
-                ]
-            );
-        }
+        //             'error' =>
+        //             $clearProcess->getErrorOutput(),
+        //         ]
+        //     );
+        // }
 
         return [
             'success' => true,
 
-            'message' =>
-            'Database restored successfully.',
+            'message' => 'Database restored successfully. Application files were not changed.',
 
-            'safety_backup' =>
-            $safetyBackupOutput,
+            'safety_backup' => $safetyBackupOutput,
 
             'restore_output' =>
             trim(
@@ -665,10 +591,7 @@ class BackupService
      */
     public function cleanup(): string
     {
-        $php = env(
-            'PHP_CLI_BINARY',
-            PHP_BINARY
-        );
+        $php = PHP_BINARY;
 
         $process = new Process([
             $php,

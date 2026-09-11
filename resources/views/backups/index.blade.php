@@ -594,12 +594,12 @@
                 Swal.fire({
                     title: 'Creating Backup',
                     html: `
-                <div class="text-muted">
-                    PharmaDesk is creating a backup.
-                    <br>
-                    Please do not close or refresh this page.
-                </div>
-            `,
+                    <div class="text-muted">
+                        PharmaDesk is creating a backup.
+                        <br>
+                        Please do not close or refresh this page.
+                    </div>
+                `,
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     showConfirmButton: false,
@@ -666,12 +666,10 @@
             }
 
 
-            $('#createBackupBtn')
-                .on('click', createBackup);
+            $('#createBackupBtn').on('click', createBackup);
 
 
-            $(document)
-                .on('click', '#emptyCreateBackupBtn', createBackup);
+            $(document).on('click', '#emptyCreateBackupBtn', createBackup);
 
 
             /*
@@ -914,10 +912,10 @@
 
 
                     let warning = `
-                <p class="mb-2">
-                    This backup will be permanently deleted.
-                </p>
-            `;
+                    <p class="mb-2">
+                        This backup will be permanently deleted.
+                    </p>
+                `;
 
 
                     if (isLatest) {

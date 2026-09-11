@@ -2,70 +2,35 @@
 
 @section('content')
 
+{{-- ============================================== --}}
+{{-- Page Header --}}
+{{-- ============================================== --}}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
-
     <div>
-
         <h2 class="fw-bold mb-1">
-
-            <i class="fas fa-capsules text-primary me-2"></i>
-
+            <i class="fas fa-eye text-info me-2"></i>
             Medicine Details
-
         </h2>
-
         <p class="text-muted mb-0">
-
-            View complete information about this medicine.
-
+            View complete medicine information and inventory status.
         </p>
-
     </div>
-
     <div>
-
         <nav>
-
             <ol class="breadcrumb justify-content-end mb-2">
-
                 <li class="breadcrumb-item">
-
-                    <a href="{{ route('home') }}">
-
-                        Dashboard
-
-                    </a>
-
+                    <a href="{{ route('home') }}">Dashboard</a>
                 </li>
-
                 <li class="breadcrumb-item">
-
-                    Master Data
-
+                    <a href="{{ route('medicines.index') }}">Medicines</a>
                 </li>
-
-                <li class="breadcrumb-item">
-
-                    <a href="{{ route('medicines.index') }}">
-
-                        Medicines
-
-                    </a>
-
-                </li>
-
                 <li class="breadcrumb-item active">
-
                     Details
-
                 </li>
-
             </ol>
-
         </nav>
-
     </div>
-
 </div>
 
 <div class="row">

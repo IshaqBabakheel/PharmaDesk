@@ -1,0 +1,397 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="
+            default-src 'self';
+            style-src 'self' 'unsafe-inline';
+            script-src 'self';
+        "
+    >
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>PharmaDesk Update</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            min-height: 100vh;
+
+            background: #f5f7fa;
+
+            color: #18212f;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .card {
+            width: calc(100% - 36px);
+
+            max-width: 520px;
+
+            background: #ffffff;
+
+            border:
+                1px solid
+                #e1e6ed;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 12px 36px
+                rgba(
+                    17,
+                    24,
+                    39,
+                    .12
+                );
+
+            padding: 26px;
+        }
+
+        .brand {
+            display: flex;
+
+            gap: 12px;
+
+            align-items: center;
+        }
+
+        .icon {
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 10px;
+
+            display: grid;
+
+            place-items: center;
+
+            background: #eef4ff;
+
+            color: #2457c5;
+
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 0;
+
+            font-size: 20px;
+        }
+
+        .subtitle {
+            margin:
+                6px 0 0;
+
+            color: #657083;
+
+            font-size: 13px;
+        }
+
+        .versions {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            gap: 20px;
+
+            margin:
+                22px 0 18px;
+        }
+
+        .label {
+            font-size: 11px;
+
+            color: #7c8797;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .08em;
+        }
+
+        .value {
+            margin-top: 5px;
+
+            font-size: 16px;
+
+            font-weight: 600;
+        }
+
+        .message {
+            color: #4f5b6d;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .status {
+            min-height: 20px;
+
+            margin-top: 14px;
+
+            color: #4f5b6d;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .error {
+            color: #a12626;
+        }
+
+        .progress {
+            display: none;
+
+            margin-top: 18px;
+        }
+
+        .track {
+            height: 9px;
+
+            background: #e8edf4;
+
+            border-radius:
+                999px;
+
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+
+            width: 0%;
+
+            background: #2457c5;
+
+            transition:
+                width .2s ease;
+        }
+
+        .meta {
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            margin-top: 8px;
+
+            color: #707b8d;
+
+            font-size: 12px;
+        }
+
+        .buttons {
+            display: flex;
+
+            justify-content:
+                flex-end;
+
+            gap: 10px;
+
+            margin-top: 24px;
+        }
+
+        button {
+            min-width: 110px;
+
+            padding:
+                10px 15px;
+
+            border:
+                1px solid
+                #d5dbe4;
+
+            border-radius: 8px;
+
+            background: #fff;
+
+            color: #263143;
+
+            font: inherit;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+        button.primary {
+            background: #2457c5;
+
+            border-color:
+                #2457c5;
+
+            color: #fff;
+        }
+
+        button:disabled {
+            opacity: .55;
+
+            cursor: default;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <main
+        class="card"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="brand">
+
+            <div class="icon">
+                P
+            </div>
+
+            <div>
+
+                <h1>
+                    PharmaDesk Update
+                </h1>
+
+                <div class="subtitle">
+                    Keep your pharmacy system secure and up to date.
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="versions">
+
+            <div>
+
+                <div class="label">
+                    Current version
+                </div>
+
+                <div
+                    class="value"
+                    id="currentVersion"
+                >
+                    —
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    New version
+                </div>
+
+                <div
+                    class="value"
+                    id="newVersion"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+        <p
+            class="message"
+            id="message"
+        >
+            A newer version of PharmaDesk is available.
+        </p>
+
+        <div
+            class="progress"
+            id="progress"
+        >
+
+            <div class="track">
+
+                <div
+                    class="bar"
+                    id="bar"
+                ></div>
+
+            </div>
+
+            <div class="meta">
+
+                <span id="percent">
+                    0%
+                </span>
+
+                <span id="speed">
+                    Preparing...
+                </span>
+
+            </div>
+
+        </div>
+
+        <div
+            class="status"
+            id="status"
+        ></div>
+
+        <div class="buttons">
+
+            <button
+                id="later"
+                type="button"
+            >
+                Later
+            </button>
+
+            <button
+                id="action"
+                class="primary"
+                type="button"
+            >
+                Download
+            </button>
+
+        </div>
+
+    </main>
+
+    <script src="./update-renderer.js"></script>
+
+</body>
+
+</html>

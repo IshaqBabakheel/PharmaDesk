@@ -14,7 +14,6 @@
                 </form>
                 <div class="header-button">
                     
-                    <?php if(auth()->guard()->check()): ?>
                     <div class="dropdown">
 
                         <button
@@ -56,7 +55,6 @@
                         </div>
 
                     </div>
-                    <?php endif; ?>
 
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu" role="button" tabindex="0"

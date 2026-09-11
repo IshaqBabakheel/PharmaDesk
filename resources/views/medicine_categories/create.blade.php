@@ -5,39 +5,36 @@
 @section('content')
 
 <div class="container-fluid">
-    {{-- Page Header --}}
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-2">
+    {{-- ============================================== --}}
+{{-- Page Header --}}
+{{-- ============================================== --}}
 
-        <div>
-            <h2 class="fw-bold mb-1 me">
-                <i class="fas fa-capsules text-primary"></i>
-                Medicine Categories
-            </h2>
-        </div>
-
-        <nav aria-label="breadcrumb" class="mt-3 mt-lg-0">
-            <ol class="breadcrumb justify-content-lg-end mb-0">
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-plus-circle text-success me-2"></i>
+            Create New Category
+        </h2>
+        <p class="text-muted mb-0">
+            Add a new medicine category to the system.
+        </p>
+    </div>
+    <div>
+        <nav>
+            <ol class="breadcrumb justify-content-end mb-2">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('home') }}" class="text-decoration-none">
-                        <i class="fas fa-house me-1"></i>Dashboard
-                    </a>
+                    <a href="{{ route('home') }}">Dashboard</a>
                 </li>
-
-                <li class="breadcrumb-item" aria-current="page">
-                    Categories
+                <li class="breadcrumb-item">
+                    <a href="{{ route('medicine-categories.index') }}">Categories</a>
                 </li>
-
-                <li class="breadcrumb-item active" aria-current="page">
-                    Create Categories
+                <li class="breadcrumb-item active">
+                    Create
                 </li>
-
             </ol>
         </nav>
     </div>
-    <p class="text-muted mb-4">
-        Manage medicine categories such as Capsules, Syrups, Injections, and Creams.
-    </p>
+</div>
 
     {{-- main content --}}
     <div class="card">

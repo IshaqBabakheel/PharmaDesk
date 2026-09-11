@@ -4,35 +4,36 @@
 
 @section('content')
 
-    {{-- Page Header --}}
-    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-2">
+    {{-- ============================================== --}}
+{{-- Page Header --}}
+{{-- ============================================== --}}
 
-        <div>
-            <h2 class="fw-bold mb-1 me">
-                <i class="fas fa-pills text-primary"></i>
-                Medicine Types
-            </h2>
-        </div>
-
-        <nav aria-label="breadcrumb" class="mt-3 mt-lg-0">
-            <ol class="breadcrumb justify-content-lg-end mb-0">
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-pills text-primary me-2"></i>
+            Medicine Types
+        </h2>
+        <p class="text-muted mb-0">
+            Manage different types of medicines (Tablet, Syrup, Capsule, etc.).
+        </p>
+    </div>
+    <div>
+        <nav>
+            <ol class="breadcrumb justify-content-end mb-2">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('home') }}" class="text-decoration-none">
-                        <i class="fas fa-house me-1"></i>Dashboard
-                    </a>
+                    <a href="{{ route('home') }}">Dashboard</a>
                 </li>
-
-                <li class="breadcrumb-item active" aria-current="page">
-                    Medicine Types
+                <li class="breadcrumb-item">
+                    Master Data
                 </li>
-
+                <li class="breadcrumb-item active">
+                    Types
+                </li>
             </ol>
         </nav>
     </div>
-    <p class="text-muted mb-4">
-        Manage medicine types such as Prescription, Controlled Drugs, Herbal, and Supplements.
-    </p>
+</div>
 
     {{-- main content --}}
     <div class="card">

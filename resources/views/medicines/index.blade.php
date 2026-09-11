@@ -2,62 +2,35 @@
 
 @section('content')
     {{-- ============================================== --}}
-    {{-- Page Header --}}
-    {{-- ============================================== --}}
+{{-- Page Header --}}
+{{-- ============================================== --}}
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold mb-1">
-                <i class="fas fa-capsules text-primary me-2"></i>
-                Medicine Management
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Manage medicines, pricing, stock levels and inventory.
-
-            </p>
-
-        </div>
-
-        <div>
-
-            <nav>
-
-                <ol class="breadcrumb justify-content-end mb-2">
-
-                    <li class="breadcrumb-item">
-
-                        <a href="{{ route('home') }}">
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li class="breadcrumb-item">
-
-                        Master Data
-
-                    </li>
-
-                    <li class="breadcrumb-item active">
-
-                        Medicines
-
-                    </li>
-
-                </ol>
-
-            </nav>
-
-
-        </div>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-capsules text-primary me-2"></i>
+            Medicines
+        </h2>
+        <p class="text-muted mb-0">
+            Manage medicines, pricing, stock levels and inventory.
+        </p>
     </div>
+    <div>
+        <nav>
+            <ol class="breadcrumb justify-content-end mb-2">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    Master Data
+                </li>
+                <li class="breadcrumb-item active">
+                    Medicines
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
 
 
@@ -70,7 +43,7 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            {{-- Filter buttons for showing trashed suppliers --}}
+            {{-- Filter buttons for showing trashed records --}}
             @include('components.filter-buttons')
             {{-- create button --}}
             @can('medicines.create')

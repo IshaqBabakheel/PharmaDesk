@@ -23,66 +23,35 @@
 @endpush
 @section('content')
     {{-- ============================================== --}}
-    {{-- Page Header --}}
-    {{-- ============================================== --}}
+{{-- Page Header --}}
+{{-- ============================================== --}}
 
-    <div class="page-header d-flex justify-content-between align-items-lg-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold mb-1">
-
-                <i class="fas fa-truck-field text-primary me-2"></i>
-
-                Suppliers
-
-            </h2>
-
-            <p class="text-muted mb-0">
-
-                Manage supplier companies, contact information and purchasing partners.
-
-            </p>
-
-        </div>
-
-        <div>
-
-            <nav aria-label="breadcrumb">
-
-                <ol class="breadcrumb justify-content-end mb-2">
-
-                    <li class="breadcrumb-item">
-
-                        <a href="{{ route('home') }}">
-
-                            <i class="fas fa-house me-1"></i>
-
-                            Dashboard
-
-                        </a>
-
-                    </li>
-
-                    <li class="breadcrumb-item">
-
-                        Purchases
-
-                    </li>
-
-                    <li class="breadcrumb-item active">
-
-                        Suppliers
-
-                    </li>
-
-                </ol>
-
-            </nav>
-
-        </div>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-truck text-primary me-2"></i>
+            Suppliers
+        </h2>
+        <p class="text-muted mb-0">
+            Manage suppliers and their contact information.
+        </p>
     </div>
+    <div>
+        <nav>
+            <ol class="breadcrumb justify-content-end mb-2">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    Master Data
+                </li>
+                <li class="breadcrumb-item active">
+                    Suppliers
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
     @include('suppliers.partials.stats')
 
